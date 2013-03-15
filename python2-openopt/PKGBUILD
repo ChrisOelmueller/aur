@@ -14,13 +14,10 @@ url='http://www.openopt.org'
 source=("http://openopt.org/images/3/33/${_pythonname}.zip")
 
 build() {
-  cd $srcdir/${_pythonname}
+  cd "$srcdir/${_pythonname}"
 
-  # necessary in __init__.py and kernel/mfa.py
-  find -name '*\.py' -exec sed -e 's@#!\(\s\)*/usr/bin/env python@&2@' -i {} \;
-
-  python2 setup.py install --prefix=/usr --root=$pkgdir --optimize=1
-  install -D -m 644 COPYING.txt $pkgdir/usr/share/licenses/$pkgname/COPYING.txt
+  python2 setup.py install --prefix=/usr --root="$pkgdir/" --optimize=1
+  install -D -m 644 COPYING.txt "$pkgdir/usr/share/licenses/$pkgname/COPYING.txt"
 }
 
 md5sums=('214517cf319eb75a2515fe4f3bcc0684')
