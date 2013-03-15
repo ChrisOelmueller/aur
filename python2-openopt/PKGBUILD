@@ -7,10 +7,10 @@ _pythonname=OpenOpt
 pkgver=0.45
 pkgrel=1
 arch=('any')
+url='http://www.openopt.org'
 license=('BSD')
 pkgdesc='Optimization library'
 depends=('python2' 'python2-numpy')
-url='http://www.openopt.org'
 source=("http://openopt.org/images/3/33/${_pythonname}.zip")
 
 build() {
