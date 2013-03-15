@@ -5,12 +5,13 @@
 pkgname=python2-openopt
 _pythonname=OpenOpt
 pkgver=0.45
-pkgrel=1
+pkgrel=2
 arch=('any')
 url='http://www.openopt.org'
 license=('BSD')
 pkgdesc='Optimization library'
 depends=('python2' 'python2-numpy')
+conflicts=('python-openopt')
 source=("http://openopt.org/images/3/33/${_pythonname}.zip")
 
 build() {
