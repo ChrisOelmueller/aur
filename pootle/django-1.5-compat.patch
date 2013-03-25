@@ -1,0 +1,76 @@
+diff --git a/pootle/apps/contact_form_i18n/urls.py b/pootle/apps/contact_form_i18n/urls.py
+index fbdf3db..b1e8da4 100644
+--- a/pootle/apps/contact_form_i18n/urls.py
++++ b/pootle/apps/contact_form_i18n/urls.py
+@@ -12,7 +12,7 @@ hierarchy (for best results with the defaults, include it under
+ 
+ 
+ from django.conf.urls.defaults import patterns, url
+-from django.views.generic.simple import direct_to_template
++from django.views.generic import TemplateView
+ 
+ from contact_form_i18n.views import contact_form
+ 
+@@ -22,7 +22,6 @@ urlpatterns = patterns('',
+                            contact_form,
+                            name='contact_form'),
+                        url(r'^sent/?$',
+-                           direct_to_template,
+-                           { 'template': 'contact_form/contact_form_sent.html' },
++                           TemplateView.as_view(template_name='contact_form/contact_form_sent.html'),
+                            name='contact_form_sent'),
+                        )
+diff --git a/pootle/apps/pootle_store/templatetags/store_tags.py b/pootle/apps/pootle_store/templatetags/store_tags.py
+index db6b886..9e99d3c 100644
+--- a/pootle/apps/pootle_store/templatetags/store_tags.py
++++ b/pootle/apps/pootle_store/templatetags/store_tags.py
+@@ -24,7 +24,7 @@ from django import template
+ from django.core.exceptions import ObjectDoesNotExist
+ #FIXME: _loader is probably not a stable API for the future, but seems like
+ # the best way to go for now:
+-from django.template.loaders.app_directories import _loader
++from django.template.loaders.app_directories import Loader
+ from django.utils.safestring import mark_safe
+ from django.utils.translation import ugettext as _, ungettext
+ 
+diff --git a/pootle/apps/profiles/views.py b/pootle/apps/profiles/views.py
+index 21daa90..de992fd 100644
+--- a/pootle/apps/profiles/views.py
++++ b/pootle/apps/profiles/views.py
+@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect
+ from django.shortcuts import get_object_or_404
+ from django.shortcuts import render_to_response
+ from django.template import RequestContext
+-from django.views.generic.list_detail import object_list
++from django.views.generic.list import ListView
+ 
+ from profiles import utils
+ 
+@@ -334,4 +334,4 @@ def profile_list(request, public_profile_field=None,
+     if public_profile_field is not None:
+         queryset = queryset.filter(**{ public_profile_field: True })
+     kwargs['queryset'] = queryset
+-    return object_list(request, template_name=template_name, **kwargs)
++    return ListView.as_view(request, template_name=template_name, **kwargs)
+diff --git a/pootle/apps/registration/urls.py b/pootle/apps/registration/urls.py
+index adb1341..3fb567e 100644
+--- a/pootle/apps/registration/urls.py
++++ b/pootle/apps/registration/urls.py
+@@ -21,7 +21,7 @@ various steps of the user-signup process.
+ 
+ 
+ from django.conf.urls.defaults import *
+-from django.views.generic.simple import direct_to_template
++from django.views.generic import TemplateView
+ from django.contrib.auth import views as auth_views
+ 
+ from registration.views import activate
+@@ -66,7 +66,6 @@ urlpatterns = patterns('',
+                            register,
+                            name='registration_register'),
+                        url(r'^register/complete/?$',
+-                           direct_to_template,
+-                           {'template': 'registration/registration_complete.html'},
++                           TemplateView.as_view(template_name='registration/registration_complete.html'),
+                            name='registration_complete'),
+                        )
