@@ -1,0 +1,60 @@
+diff --git a/pootle/apps/pootle_app/views/admin/adminpages.py b/pootle/apps/pootle_app/views/admin/adminpages.py
+index 0191cc5..d3923f5 100644
+--- a/pootle/apps/pootle_app/views/admin/adminpages.py
++++ b/pootle/apps/pootle_app/views/admin/adminpages.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ # -*- coding: utf-8 -*-
+ #  Copyright 2006-2012 Zuza Software Foundation
+ #
+diff --git a/pootle/apps/pootle_misc/siteconfig.py b/pootle/apps/pootle_misc/siteconfig.py
+index 8698db3..c04b27e 100644
+--- a/pootle/apps/pootle_misc/siteconfig.py
++++ b/pootle/apps/pootle_misc/siteconfig.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright 2004-2009 Zuza Software Foundation
+diff --git a/pootle/apps/pootle_misc/util.py b/pootle/apps/pootle_misc/util.py
+index 29892dd..aa0deb0 100644
+--- a/pootle/apps/pootle_misc/util.py
++++ b/pootle/apps/pootle_misc/util.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright 2004-2012 Zuza Software Foundation
+diff --git a/pootle/apps/pootle_store/util.py b/pootle/apps/pootle_store/util.py
+index e8d94e5..ca21107 100644
+--- a/pootle/apps/pootle_store/util.py
++++ b/pootle/apps/pootle_store/util.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ # -*- coding: utf-8 -*-
+ #
+ # Copyright 2004-2012 Zuza Software Foundation
+diff --git a/pootle/scripts/hooks.py b/pootle/scripts/hooks.py
+index fbe8d70..0ddf331 100644
+--- a/pootle/scripts/hooks.py
++++ b/pootle/scripts/hooks.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ 
+ import logging
+ 
+diff --git a/pootle/scripts/sumo.py b/pootle/scripts/sumo.py
+index 35754f2..2d4521a 100644
+--- a/pootle/scripts/sumo.py
++++ b/pootle/scripts/sumo.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python
+ 
+ # Verbatim script for managing the SUMO (support.mozilla.com) project.  More information at
+ # https://wiki.mozilla.org/Verbatim
