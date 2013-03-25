@@ -1,0 +1,116 @@
+# Maintainer: Chris Oelmueller <chris.oelmueller+aur@gmail.com>
+# Contributor: Jaroslav Lichtblau <tu@dragonlord.cz>
+
+pkgname=pootle
+_pythonname=Pootle
+pkgver=2.5.0
+pkgrel=1
+pkgdesc="A web translation and translation management engine based on Django and the Translate Toolkit."
+arch=('i686' 'x86_64')
+url="http://pootle.translatehouse.org/"
+license=('GPL')  # v2 or later
+depends=('python2-django'
+         'python2-argparse'
+         'python2-cssmin'
+         'python2-lxml'
+         'python2-webassets'
+	 'translate-toolkit'
+         'django-voting-0.1'
+	 'zip' 'unzip')
+optdepends=('apache:    web server, see http://docs.translatehouse.org/projects/pootle/en/latest/server/web.html#running-under-apache'
+            'nginx:     web server, see http://docs.translatehouse.org/projects/pootle/en/latest/server/web.html#running-under-nginx'
+            'gunicorn:  web server'
+            'iso-codes: translated language/country names'
+            'python2-levenshtein: performance improvements when updating from templates'
+            'python2-pylibmc:     memcached to improve cache performance'
+	    'python2-xapian:   indexing for faster search (automatically picks one from any of the available engines)'
+            'python2-pylucene: indexing for faster search (automatically picks one from any of the available engines)'
+            'python2-ldap:  LDAP authentication support, see http://docs.translatehouse.org/projects/pootle/en/latest/features/authentication.html#authentication-ldap'
+            'python2-raven: log server exceptions to a Sentry server, see http://sentry.readthedocs.org/en/latest/'
+            'git:        version control integration'
+            'mercurial:  version control integration'
+            'darcs:      version control integration'
+            'bzr:        version control integration'
+            'subversion: version control integration'
+            'cvs:        version control integration'
+            'mysql-python:      MySQL database engine'
+            'python2-cx_oracle: Oracle database engine'
+            'python2-psycopg2:  PostgreSQL database engine'
+            'python2-south: upgrading between pootle versions'
+)
+source=("http://downloads.sourceforge.net/translate/${_pythonname}-${pkgver}-rc1.tar.bz2"
+        django-1.5-compat.patch
+	bin-env-python.patch)
+
+prepare() {
+  cd "$srcdir/${_pythonname}-$pkgver-rc1"
+
+  msg  "Fixing requirements files..."
+  # python2-webassets already contains django_assets which is django-assets in pootle docs
+  # Simply remove it from requirements and trust `depends` will suffice here.
+  sed -i -e 's@^django-assets$@@' "requirements/base.txt" \
+                                  "Pootle.egg-info/requires.txt"
+
+  msg  "Patching in compatibility with Django 1.5..."
+  # This potentially breaks earlier Django versions.
+  # If you're on 1.4 or earlier, comment or remove this line:
+  patch -p1 -i "${srcdir}/django-1.5-compat.patch"
+
+  msg  "Replacing 'python' shebangs with 'python2'..."
+
+  # python2: Replace '/usr/bin/python' with '/usr/bin/env python'
+  patch -p1 -i "${srcdir}/bin-env-python.patch"
+
+  # python2: Hack 'env python' shebang for python and (sample) configuration files
+  find -name "*.py"          -exec sed -e 's@#!*/usr/bin/env python$@&2@g' -i {} \;
+  find -name "*.conf"        -exec sed -e 's@#!*/usr/bin/env python$@&2@g' -i {} \;
+  find -name "*.conf.sample" -exec sed -e 's@#!*/usr/bin/env python$@&2@g' -i {} \;
+}
+
+package() {
+  cd "$srcdir/${_pythonname}-$pkgver-rc1"
+
+  msg  "Byte-compiling python files..."
+  python2 setup.py --quiet install --root="$pkgdir/" --optimize=1
+
+  # Since Django 1.5 can cause trouble (my patch above may fail to address some issues):
+  # print detected versions of pootle, translate toolkit and django
+  msg  "Detected versions:"
+  pootle --version
+
+  msg  "Initializing a configuration file (\`pootle init\`)"
+  #pootle init
+
+  msg2 "Please review and edit!"
+  msg2 "In particular, you want to change the database engine to MySQL or Postgres"
+  msg2 "instead of the default SQLite before running the server in production."
+
+  msg  "Further steps after your configuration is ready:"
+  msg2 "Optionally create a user to run pootle as"
+  msg2 "Run \`[sudo] chown -R <pootleuser>\` on the pootle PODIRECTORY"
+  msg2 "(by default:) /usr/lib/python2.7/site-packages/pootle/po/"
+
+  # TODO new manage.py stuff that replaced localhost:8000 visit
+  # python manage.py syncdb --noinput
+  # python manage.py migrate
+  # python manage.py initdb
+
+  msg  "Run \`pootle collectstatic --noinput\`"
+  msg  "Run \`pootle assets build\`"
+
+  msg  "Run \`pootle start\`"
+  msg2 "Open http://localhost:8000/ in a browser"
+
+  msg  "Find lots of hints and tips in the Pootle quickstart docs at"
+  echo "http://docs.translatehouse.org/projects/pootle/en/latest/server/installation.html"
+}
+
+#md5sums=('fe36d8b9d4da202fa8a02cb69fb08775')
+#sha256sums=('d22c43fb76ae52f7d5b85a35a9aae9039d593c81c675e8d59e98a8b08e649bd9')
+
+md5sums=('fe36d8b9d4da202fa8a02cb69fb08775'
+         '9a16846c282ff577e1df3d570e4160c6'
+         'ff843aa9bae75c9509f5b183ea8b74e9')
+sha256sums=('d22c43fb76ae52f7d5b85a35a9aae9039d593c81c675e8d59e98a8b08e649bd9'
+            '18653c8bb24c4e57833be70740cc19f62fe17c1b9798daf027a0f36e33da3df3'
+            'a5bb219ae42623e92318fa8f18e5875f9c4d51a4b472805a09efc626fad386de')
