@@ -1,0 +1,47 @@
+# Maintainer: Chris Oelmueller <chris.oelmueller@gmail.com>
+
+pkgname=weblate-git
+_pkgname=weblate
+pkgver=1.5.229.g0575c85
+pkgrel=1
+pkgdesc='Free web-based translation tool with tight Git integration.'
+arch=('any')
+url='http://weblate.org/'
+license=('GPL')
+depends=('python2' 'python2-cairo' 'pygtk'
+         'python2-gitpython' 'python2-whoosh'
+         'python2-django' 'django-registration' 'python2-south'
+         'translate-toolkit' 'git')
+optdepends=('python2-libravatar: federated avatar support'
+            'python2-pyicu: proper sorting of non-ascii strings')
+provides=('weblate')
+source=("$pkgname::git://github.com/nijel/weblate.git")
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  # tags are 'weblate-1.5' etc. - only use '1.5'
+  git describe --always | cut -d- -f2- | sed 's@-@.@g'
+}
+
+prepare() {
+  cd "$srcdir/$pkgname"
+  # manage.py and ttkit/aresource.py
+  sed -i -e "s|#![ ]*/usr/bin/python$|#!/usr/bin/python2|" \
+         -e "s|#![ ]*/usr/bin/env python$|#!/usr/bin/env python2|" \
+      $(find . -name '*.py')
+}
+
+package() {
+  cd "$srcdir/$pkgname/$_pkgname"
+  cp "settings_example.py" "settings.py"
+
+  mkdir -p "$pkgdir/usr/share/webapps/"
+  cp -r "$srcdir/$pkgname" "$pkgdir/usr/share/webapps/"
+
+  msg  "To complete the $_pkgname installation:"
+  msg2 "Edit your configuration file: /usr/share/webapps/$pkgname/$_pkgname/settings.py"
+  msg2 "Serve $_pkgname: ln -s /usr/share/webapps/$pkgname /srv/http/"
+}
+
+md5sums=('SKIP')
+sha256sums=('SKIP')
