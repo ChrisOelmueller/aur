@@ -1,7 +1,21 @@
 */pkg
 */src
+*/*/pkg
+*/*/src
 
 *.bz2
 *.gz
 *.xz
 *.zip
+*.gem
+
+# Version control sources
+*/*-git/
+*/*/*-git/
+*/*-hg/
+
+# Special name here, still vcs source
+openanno-archive/openanno-archive/
+
+# Package-specific
+easyrpg/rtp*
