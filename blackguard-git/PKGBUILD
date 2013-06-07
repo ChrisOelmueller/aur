@@ -1,0 +1,35 @@
+# Maintainer: Chris Oelmueller <chris.oelmueller@gmail.com>
+
+pkgname=blackguard-git
+pkgver=164.cfaf338
+pkgrel=1
+pkgdesc='Puzzle game. March entry for http://onegameamonth.com/ "Rogue".'
+arch=('x86_64' 'i686')
+url='https://github.com/MrBeast/Blackguard/wiki/1GAM'
+license=('?') #??
+
+# Depend on -git due to possible bug in currently packaged 'sfml'
+# see https://github.com/LaurentGomila/CSFML/issues/22
+depends=('sfml-git')
+
+makedepends=('git' 'cmake')
+source=("$pkgname::git+https://github.com/MrBeast/Blackguard.git")
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  echo $(git rev-list --count master).$(git rev-parse --short master)
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  cmake .
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make DESTDIR="$pkgdir/" install
+}
+
+md5sums=('SKIP')
+sha256sums=('SKIP')
