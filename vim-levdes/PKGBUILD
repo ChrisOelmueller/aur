@@ -1,0 +1,23 @@
+# Maintainer: Chris Oelmueller <chris.oelmueller@gmail.com>
+pkgname=vim-levdes
+# Should have `master` substituted for stable release if ever published
+# Note: The source url would not need to change with this.
+pkgver=master
+pkgrel=1
+pkgdesc="Vim syntax files for highlighting .des files used as level markup in Dungeon Crawl: Stone Soup"
+arch=(i686 x86_64)
+url="https://crawl.develz.org/"
+license=('GPL')
+depends=('vim-runtime')
+options=(!emptydirs !makeflags)
+source=("http://gitorious.org/crawl/crawl/blobs/raw/$pkgver/crawl-ref/source/dat/vim/syntax/levdes.vim")
+md5sums=('caa9e3190669c380063925c454620e90')
+sha256sums=('2898b8b116308532bc5f7b0a3f507eaf93cc209beaaf68fbb621bef6cf90931a')
+
+package() {
+  cd "$srcdir"
+  install -dm 755 "$pkgdir/usr/share/vim/vimfiles/syntax"
+  install  -m 644 levdes.vim "$pkgdir/usr/share/vim/vimfiles/syntax"
+  msg  "In your .vimrc, add this line:"
+  msg2 "autocmd BufNewFile,BufRead *.des *.des set syntax=levdes"
+}
