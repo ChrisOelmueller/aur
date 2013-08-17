@@ -1,0 +1,43 @@
+# Maintainer: Chris Oelmueller <chris.oelmueller@gmail.com>
+# Generator: CPANPLUS::Dist::Arch 1.25
+
+pkgname='perl-app-termcast'
+pkgver='0.12'
+pkgrel='1'
+pkgdesc="Utility to broadcast your terminal sessions for remote viewing. Public termcast reflector e.g.: telnet termcast.org"
+arch=('any')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl-json' 'perl-moose' 'perl-moosex-getopt' 'perl-term-filter' 'perl-term-readkey' 'perl-try-tiny')
+makedepends=('perl-test-requires')
+url='http://search.cpan.org/dist/App-Termcast'
+source=('http://search.cpan.org/CPAN/authors/id/D/DO/DOY/App-Termcast-0.12.tar.gz')
+md5sums=('fcfe4c55b718ef97f08ae4aec57a4c7c')
+sha512sums=('e548f7350066be4e03ffe5531c512a10fef4024d717bdd1eee303ff05a2f9ca6995a3549ee4a694b4f93d4e96d357d2a1aea1cddffe119ac181be28b67f970e7')
+_distdir="App-Termcast-0.12"
+
+build() {
+  ( export PERL_MM_USE_DEFAULT=1 PERL5LIB=""                 \
+      PERL_AUTOINSTALL=--skipdeps                            \
+      PERL_MM_OPT="INSTALLDIRS=vendor DESTDIR='$pkgdir'"     \
+      PERL_MB_OPT="--installdirs vendor --destdir '$pkgdir'" \
+      MODULEBUILDRC=/dev/null
+
+    cd "$srcdir/$_distdir"
+    /usr/bin/perl Makefile.PL
+    make
+  )
+}
+
+check() {
+  cd "$srcdir/$_distdir"
+  ( export PERL_MM_USE_DEFAULT=1 PERL5LIB=""
+    make test
+  )
+}
+
+package() {
+  cd "$srcdir/$_distdir"
+  make install
+  find "$pkgdir" -name .packlist -o -name perllocal.pod -delete
+}
