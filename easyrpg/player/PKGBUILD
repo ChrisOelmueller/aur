@@ -1,20 +1,20 @@
 # Maintainer: Chris Oelmueller <chris.oelmueller@gmail.com>
 pkgname=easyrpg-player-git
-pkgver=0.1.268.g6449223
+pkgver=0.1.1.137.g6449223
 pkgrel=1
 pkgdesc="Game interpreter to play RPG Maker 2000, 2003 and EasyRPG games."
-arch=('any')
+arch=('i686' 'x86_64')
 url="http://www.easy-rpg.org/"
 license=('GPL')
 depends=('easyrpg-readers' 'sdl' 'sdl_mixer' 'sdl_ttf' 'sdl_image' 'zlib')
-makedepends=('git')
+makedepends=('git' 'boost')
 provides=('easyrpg-player')
 source=("$pkgname::git://github.com/EasyRPG/Player.git")
 md5sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$pkgname"
-  git describe --always | sed 's@-@.@g'
+  git describe --tags --always | sed 's@-@.@g'
 }
 
 build() {
