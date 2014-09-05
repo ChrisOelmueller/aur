@@ -11,12 +11,11 @@
 # BIG FAT Huge Important Note
 # = = = = = = = = = = = = = =
 # Replace the dummy user in build() before building this package!
-# dwarffortress-hacked is found here: http://bpaste.net/show/48677257af27
 # To minimize potential issues, it's probably best to run the (not hacked)
 # `dwarffortress` binary once before installing as well.
 
 pkgname=dfhack-git
-pkgver=0.40.10.r1
+pkgver=0.40.11.r1
 pkgrel=1
 pkgdesc="A cross-platform library for accessing Dwarf Fortress memory"
 arch=('i686' 'x86_64')
@@ -40,17 +39,20 @@ source=(
   "git://github.com/DFHack/df-structures.git"
   "git://github.com/DFHack/clsocket.git"
   "dwarffortress-hacked"
+  "allegro_color.diff"
 )
 md5sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-         '3862ac0ca51e4e35e8ab48b24f733d03')
+         '3862ac0ca51e4e35e8ab48b24f733d03'
+         '14b68204f5426a075f5e661bdf4778c2')
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
-            'b5975c44d76ecf8dbde4c08325788985c3653bf33c44f1e7ab00b744b3c4d3eb')
+            'b5975c44d76ecf8dbde4c08325788985c3653bf33c44f1e7ab00b744b3c4d3eb'
+            'c1a0540111cd5c07cd00df4bbe2cef97108b1d39d4b50c3bd210c2014d4edc55')
 
-#pkgver() {
-#  cd "$srcdir/${pkgname%-*}"
-#  git describe --long --tags | sed -r 's/([^-]*-g)/\1/;s/-/./g'
-#}
-#
+pkgver() {
+  cd "$srcdir/${pkgname%-*}"
+  git describe --long --tags | sed -r 's/([^-]*-g)/\1/;s/-/./g'
+}
+
 prepare() {
   cd "$srcdir/${pkgname%-*}"
   git submodule init
@@ -60,13 +62,15 @@ prepare() {
   git config submodule.library/xml.url $srcdir/df-structures
   git config submodule.depends/clsocket.url $srcdir/clsocket
   git submodule update
+  cd "plugins/stonesense/"
+  patch -p1 -i "$srcdir/allegro_color.diff"
 }
 
 build() {
   cd "$srcdir/${pkgname%-*}"
   cd build
   # Make sure to replace this with the correct user on your machine!
-  _DWARFUSER="urist"
+  _DWARFUSER="$USER"
   cmake .. \
     -DCMAKE_BUILD_TYPE:string=Release \
     -DCMAKE_INSTALL_PREFIX=$pkgdir/home/$_DWARFUSER/.dwarffortress \
@@ -77,8 +81,6 @@ build() {
 
   # -DCMAKE_BUILD_TYPE:string=Debug \
   # -DCMAKE_INSTALL_PREFIX=$pkgdir/opt/dwarffortress \
-
-  # -DCMAKE_INSTALL_PREFIX=$pkgdir/usr \
   # -DMEMXML_DATA_PATH:path=/usr/share/dfhack
 
   make
