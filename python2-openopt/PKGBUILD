@@ -3,7 +3,7 @@
 # Contributor: Tnoo <archtnoo at tnoo dot net>
 
 pkgname=python2-openopt
-pkgver=0.5113
+pkgver=0.5404
 pkgrel=1
 arch=('any')
 url='http://www.openopt.org'
@@ -24,5 +24,5 @@ package() {
   install -D -m 644 COPYING.txt "$pkgdir/usr/share/licenses/$pkgname/COPYING.txt"
 }
 
-md5sums=('2a92e8393da387d413d2d870b6af5145')
-sha256sums=('600a30cbe0b3f9c13e610f930ea113dbeb407d7fa1db9729eae64f484eb2d1db')
+md5sums=('bdfcd1720af7f03b46611bf6e8111f6a')
+sha256sums=('37c8c036b080593864794ae965faf7fc4aa47a117972f335231cc54766a4f243')
