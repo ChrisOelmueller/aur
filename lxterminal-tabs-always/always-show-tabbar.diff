@@ -1,0 +1,34 @@
+--- src/lxterminal.c	2016-02-29 14:34:07.635284127 +0100
++++ src/lxterminal.c	2016-02-29 14:34:44.001949582 +0100
+@@ -474,11 +474,6 @@
+     /* Make the new terminal's tab current and, if we went from one to more than one tab,
+      * turn the tab display on. */
+     gtk_notebook_set_current_page(GTK_NOTEBOOK(term->parent->notebook), term->index);
+-    if (term->index > 0)
+-    {
+-        terminal_window_set_fixed_size(terminal);
+-        gtk_notebook_set_show_tabs(GTK_NOTEBOOK(term->parent->notebook), TRUE);
+-    }
+ 
+     /* Disable Alt-n switch tabs or not. */
+     terminal_update_alt(terminal);
+@@ -927,10 +922,6 @@
+         gtk_notebook_remove_page(GTK_NOTEBOOK(terminal->notebook), term->index);
+         terminal_free(term);
+ 
+-        /* If only one page is left, hide the tab. */
+-        if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(terminal->notebook)) == 1)
+-            gtk_notebook_set_show_tabs(GTK_NOTEBOOK(terminal->notebook), FALSE);
+-
+         /* update <ALT>n status */
+         terminal_update_alt(terminal);
+     }
+@@ -1489,7 +1480,7 @@
+     /* Create a notebook as the child of the vertical box. */
+     terminal->notebook = gtk_notebook_new();
+     gtk_notebook_set_scrollable(GTK_NOTEBOOK(terminal->notebook), TRUE);
+-    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(terminal->notebook), FALSE);
++    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(terminal->notebook), TRUE);
+     gtk_notebook_set_show_border(GTK_NOTEBOOK(terminal->notebook), FALSE);
+     gtk_box_pack_start(GTK_BOX(terminal->box), terminal->notebook, TRUE, TRUE, 0);
+ 
