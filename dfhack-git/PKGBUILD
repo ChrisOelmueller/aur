@@ -13,36 +13,33 @@
 #   -DBUILD_STONESENSE=off \
 
 pkgname=dfhack-git
-pkgver=0.40.16.r1.0.ga6b5ffe
+pkgver=0.42.05.alpha1.0.gcfa66c0
 pkgrel=1
 pkgdesc="A cross-platform library for accessing Dwarf Fortress memory"
 arch=('i686' 'x86_64')
 url="https://github.com/DFHack/dfhack"
 license=('custom:zlib')
-depends=(gcc-libs libx11 allegro perl-xml-libxml)
+depends=(gcc-libs libx11 allegro4 perl-xml-libxml)
+#depends=(gcc49 libx11 allegro4 perl-xml-libxml)
 makedepends=(cmake git perl-xml-libxslt)
 if [[ $CARCH == 'x86_64' ]]; then
-  depends+=(lib32-allegro)
-  makedepends+=(gcc-multilib perl-xml-libxml)
+  depends+=(lib32-allegro4)
+  makedepends+=(gcc-libs-multilib perl-xml-libxml)
+#  makedepends+=(gcc49-multilib gcc49-libs-multilib perl-xml-libxml)
 fi
 conflicts=(dfhack dfhack-myne)
 provides=(dfhack)
 replaces=(stonesense-svn)
-# Submodules are tweaked in prepare()
+# "git://github.com/DFHack/dfhack.git#branch=develop"
 source=(
-  "git://github.com/DFHack/dfhack.git"
-  "git://github.com/DFHack/stonesense.git"
-  "git://github.com/DFHack/isoworld.git"
-  "git://github.com/DFHack/DF2MC.git"
-  "git://github.com/DFHack/df-structures.git"
-  "git://github.com/DFHack/clsocket.git"
+  "git://github.com/DFHack/dfhack.git#tag=0.42.05-alpha1"
   "dwarffortress-hacked"
   "dfhack-run"
 )
-md5sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
+md5sums=('SKIP'
          'cbdaa6d53b1bc3a08feb8f270316d20a'
          '27faf557adbcaec4c070f8094e206924')
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP'
+sha256sums=('SKIP'
             '8d68139fb2cbb49a25999462974bff5c40ba23028c823fb666507fbc151ac52d'
             'f11870300ccd8908733c8869f93ae48b22130ee338412ffcae6f8228875db747')
 
@@ -52,13 +49,16 @@ pkgver() {
 }
 
 prepare() {
+  cd "$srcdir/${pkgname%-*}/"
+  if [ -d "$srcdir/${pkgname%-*}/depends/clsocket" ]; then
+    cd "$srcdir/${pkgname%-*}/depends/clsocket"; git stash
+  fi
+  if [ -d "$srcdir/${pkgname%-*}/library/xml" ]; then
+    cd "$srcdir/${pkgname%-*}/library/xml"; git stash
+  fi
   cd "$srcdir/${pkgname%-*}"
-  git config submodule.plugins/stonesense.url $srcdir/stonesense
-  git config submodule.plugins/isoworld.url $srcdir/isoworld
-  git config submodule.plugins/df2mc.url $srcdir/DF2MC
-  git config submodule.library/xml.url $srcdir/df-structures
-  git config submodule.depends/clsocket.url $srcdir/clsocket
-  git submodule update
+  git submodule update --init
+  sed -ie 's/${GCC_VERSION_OUT} VERSION_GREATER "4.9.9"/${GCC_VERSION_OUT} VERSION_GREATER "9.9.9"/' CMakeLists.txt
 }
 
 build() {
@@ -66,7 +66,7 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE:string=Release \
     -DCMAKE_INSTALL_PREFIX=$pkgdir/opt/dwarffortress \
-    -DBUILD_STONESENSE=on \
+    -DBUILD_STONESENSE=off \
     -DBUILD_LIBRARY=on \
     -DBUILD_PLUGINS=on \
     -DSTONESENSE_INTERNAL_SO=off \
@@ -83,5 +83,5 @@ package() {
                  "$pkgdir/usr/bin/dwarffortress-hacked"
   install -Dm755 "$srcdir/dfhack-run" \
                  "$pkgdir/usr/bin/dfhack-run"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/dfhack/LICENSE"
+  install -Dm644 LICENSE.rst "$pkgdir/usr/share/licenses/dfhack/LICENSE"
 }
