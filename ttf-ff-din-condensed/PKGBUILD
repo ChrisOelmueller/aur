@@ -1,0 +1,18 @@
+pkgname=ttf-ff-din-condensed
+pkgver=1
+pkgrel=1
+pkgdesc="FF DIN"
+arch=(any)
+depends=(fontconfig xorg-font-utils)
+source=("ff_din_condensed_medium-webfont.ttf")
+url=""
+license=('custom')
+install=$pkgname.install
+sha256sums=('f59b02860d39ac72a9964c46ba27a37a9f7779b9a4893969769416b9f825834f')
+
+package() {
+  cd "${srcdir}"
+  install -d "$pkgdir/usr/share/fonts/TTF"
+  install -Dm644 *.ttf "$pkgdir/usr/share/fonts/TTF"
+  #install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

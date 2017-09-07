@@ -1,0 +1,26 @@
+# Maintainer: Chris Oelmueller <c.oelmueller@blink.it>
+_pythonname=PyWavefront
+pkgname="python-${_pythonname,,}"
+pkgver=0.1.5
+pkgrel=1
+pkgdesc="Python/pyglet library for importing Wavefront .obj files"
+arch=('any')
+url="https://github.com/greenmoss/${_pythonname}"
+license=('BSD')
+depends=('python' 'pyglet')
+makedepends=('python-setuptools' )
+source=("https://pypi.python.org/packages/9e/f0/fcbafaceb54f101e965fc23fed31d962b9060667e8a3ccc202563b2135a4/${_pythonname}-${pkgver}.tar.gz")
+#source=("https://pypi.io/packages/source/p/${_pythonname}/${_pythonname}-${pkgver}.tar.gz")
+sha1sums=('a76a4c0ae46a159d6accae6434620118b1974769')
+sha256sums=('91c13679b4ae5b2dfa5f01c1516d787001d6a4d9e44082c0863ee7bbd0cd7611')
+sha512sums=('f88a3d02e2445e75c39961dab965f13074279263fac5e37474cadeeb8132dd64e7f82f60744f0e9d99b2ea309c535fa9bd6fff7c5d7be57aab1adb16d3989daf')
+
+build() {
+    cd $srcdir/PyWavefront-0.1.5
+    python setup.py build
+}
+
+package() {
+    cd $srcdir/PyWavefront-0.1.5
+    python setup.py install --root="$pkgdir" --optimize=1 
+}

@@ -1,0 +1,31 @@
+# Maintainer: Chris Oelmueller <chris.oelmueller@gmail.com>
+pkgname=asap-pathology
+pkgdesc="An open source platform for visualizing, annotating and automatically analyzing whole-slide histopathology images"
+url="https://github.com/GeertLitjens/ASAP"
+pkgver=1.7.3
+pkgrel=1
+arch=('i686' 'x86_64')
+license=('')
+depends=('boost' 'opencv' 'qt5' 'libtiff' 'libjpeg-turbo' 'jasper' 'dcmtk' 'openslide' 'pugixml' 'zlib' 'unittestpp')
+makedepends=('cmake')
+optdepends=('swig: for Python wrapping of the IO library')
+source=(".tar.bz2")
+source=("https://github.com/GeertLitjens/ASAP/archive/${pkgver}.tar.gz")
+md5sums=('ac088ba1583ac4ea039fca205f410f14')
+sha1sums=('46c2e9e92ef82ca19c4938c3d1cac6b481710ef8')
+sha512sums=('03ed53bed9ab953a5a421f1df5b5bc0e108c58bbde4dc414deba5ef24328dedc524291487bd76ec718981d445935c16bcc0ebbbd7076a741e9e5a6e98b456eb0')
+
+build() {
+  cd "${srcdir}/rftg-${pkgver}"
+  ./configure \
+    --prefix=/usr \
+
+  make
+}
+
+package() {
+  cd "${srcdir}/rftg-${pkgver}"
+  #cd "build"
+  make DESTDIR="${pkgdir}" install
+}
+
